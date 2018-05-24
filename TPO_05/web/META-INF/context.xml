@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/">
+    <Resource name="jdbc/tpo_05_db"
+              auth="Container"
+              type="javax.sql.DataSource"
+              description="User resource database"
+              driverClassName="org.postgresql.Driver"
+              url="jdbc:postgresql://localhost:5432/tpo_05_db"
+              maxTotal="50"
+              maxActive="25"
+    />
+</Context>
