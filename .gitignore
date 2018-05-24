@@ -6,35 +6,5 @@
 .idea
 *.iml
 out
-gen### macOS template
-# General
+gen
 .DS_Store
-.AppleDouble
-.LSOverride
-
-# Icon must end with two \r
-Icon
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-.idea/
-out/
-tpo_09.client/tpo_09.client.iml
-tpo_09.common/tpo_09.common.iml
-tpo_09.server/tpo_09.server.iml
