@@ -2,7 +2,7 @@
     <h3 id="time"></h3>
     <script>
         function time() {
-            document.getElementById("time").innerHTML = new Date().toLocaleTimeString();
+            // document.getElementById("time").innerHTML = new Date().toLocaleTimeString();
 
             $.get("/getServerTime", {}, function (response, status) {
                 if(status === "success") {
