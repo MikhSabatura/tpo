@@ -13,6 +13,6 @@ public class RandomResponse implements IResponse {
 
     @Override
     public BigDecimal getResult() {
-        return null;
+        return result;
     }
 }
