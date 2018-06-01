@@ -1,7 +1,8 @@
 package responses;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public interface IResponse {
+public interface IResponse extends Serializable{
     BigDecimal getResult();
 }

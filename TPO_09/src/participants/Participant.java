@@ -15,8 +15,8 @@ public abstract class Participant {
     private static ConnectionFactory connectionFactory;
     private static Destination requestQueue;
 
-    private static final String CONNECTION_FACTORY_NAME = "ActiveMQInitialContextFactory";
-    private static final String REQUEST_QUEUE_NAME = "todo";
+    private static final String CONNECTION_FACTORY_NAME = "connectionFactory";
+    private static final String REQUEST_QUEUE_NAME = "RequestQueue";
 
     static {
         try {

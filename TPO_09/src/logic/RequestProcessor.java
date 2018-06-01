@@ -12,15 +12,7 @@ import java.util.Random;
 
 public class RequestProcessor {
 
-    private IResponse processRequest(IRequest request) {
-//        ========== todo: move this block to the calling method
-        try {
-            Thread.sleep(3000 + new Random().nextInt(2000));
-        } catch (InterruptedException e) {
-            return null;
-        }
-//        ============
-
+    public static IResponse processRequest(IRequest request) {
         if(request instanceof ArithmeticRequest) {
             return processArithmeticRequest((ArithmeticRequest) request);
         } else if (request instanceof RandomRequest) {
@@ -29,11 +21,11 @@ public class RequestProcessor {
         return null; //todo: maybe throw an exceptionw
     }
 
-    private RandomResponse processRandomRequest(RandomRequest request) {
+    private static RandomResponse processRandomRequest(RandomRequest request) {
         return new RandomResponse();
     }
 
-    private ArithmeticResponse processArithmeticRequest(ArithmeticRequest request) {
+    private static ArithmeticResponse processArithmeticRequest(ArithmeticRequest request) {
         BigDecimal param1 = request.getParam1();
         BigDecimal param2 = request.getParam2();
 

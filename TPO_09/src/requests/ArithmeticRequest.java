@@ -1,5 +1,6 @@
 package requests;
 
+import javax.jms.ObjectMessage;
 import java.math.BigDecimal;
 
 public class ArithmeticRequest implements IRequest {
@@ -7,11 +8,13 @@ public class ArithmeticRequest implements IRequest {
     private final BigDecimal param1;
     private final BigDecimal param2;
     private final ArithmeticRequestType type;
+    private final String senderName;
 
-    public ArithmeticRequest(BigDecimal param1, BigDecimal param2, ArithmeticRequestType type) {
+    public ArithmeticRequest(BigDecimal param1, BigDecimal param2, ArithmeticRequestType type, String senderName) {
         this.param1 = param1;
         this.param2 = param2;
         this.type = type;
+        this.senderName = senderName;
     }
 
     public BigDecimal getParam1() {
@@ -26,4 +29,8 @@ public class ArithmeticRequest implements IRequest {
         return type;
     }
 
+    @Override
+    public String getSenderName() {
+        return senderName;
+    }
 }

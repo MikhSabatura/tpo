@@ -1,4 +1,7 @@
 package requests;
 
-public interface IRequest {
+import java.io.Serializable;
+
+public interface IRequest extends Serializable {
+    String getSenderName();
 }
