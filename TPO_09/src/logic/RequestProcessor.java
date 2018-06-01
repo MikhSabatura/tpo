@@ -45,7 +45,7 @@ public class RequestProcessor {
             case MULTIPLY:
                 return new ArithmeticResponse(param1.multiply(param2));
             case DIVIDE:
-                return new ArithmeticResponse(param1.divide(param2));
+                return new ArithmeticResponse(param1.divide(param2, 20));
         }
         return null;
     }
