@@ -1,5 +1,6 @@
 package logic;
 
+import exceptions.Assignment_09_exception;
 import requests.ArithmeticRequest;
 import requests.IRequest;
 import requests.RandomRequest;
@@ -8,7 +9,6 @@ import responses.IResponse;
 import responses.RandomResponse;
 
 import java.math.BigDecimal;
-import java.util.Random;
 
 public class RequestProcessor {
 
@@ -18,7 +18,9 @@ public class RequestProcessor {
         } else if (request instanceof RandomRequest) {
             return processRandomRequest((RandomRequest) request);
         }
-        return null; //todo: maybe throw an exceptionw
+        else {
+            throw new Assignment_09_exception("ILLEGAL REQUEST");
+        }
     }
 
     private static RandomResponse processRandomRequest(RandomRequest request) {

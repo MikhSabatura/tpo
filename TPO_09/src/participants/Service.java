@@ -13,10 +13,17 @@ import java.util.concurrent.Executors;
 
 public class Service extends Participant implements Runnable, MessageListener {
 
+
+    // TODO: 02.06.2018 0 add all packages as trusted
+
+    // TODO: 02.06.2018 1. make the bitch work
+    // TODO: 02.06.2018 2. logging actions
+    // TODO: 02.06.2018 3. review and refactor
+
     private int id;
     private final String name;
 
-    private Connection connection = null;
+    private Connection connection;
     private Session session;
 
     private static int ID;
@@ -32,20 +39,11 @@ public class Service extends Participant implements Runnable, MessageListener {
     public Service() {
         this.id = ++ID;
         this.name = NAME_PREFIX + id;
-
         try {
             this.connection = getConnectionFactory().createConnection();
             this.session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         } catch (JMSException e) {
             throw new Assignment_09_exception(e);
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (JMSException e) {
-                    throw new Assignment_09_exception(e);
-                }
-            }
         }
     }
 
@@ -59,9 +57,9 @@ public class Service extends Participant implements Runnable, MessageListener {
     @Override
     public void run() {
         try {
+            connection.start();
             MessageConsumer requestConsumer = session.createConsumer(getRequestQueue());
             requestConsumer.setMessageListener(this);
-            connection.start();
         } catch (JMSException e) {
             throw new Assignment_09_exception(e);
         }
@@ -69,9 +67,11 @@ public class Service extends Participant implements Runnable, MessageListener {
 
     @Override
     public void onMessage(Message message) {
+        System.out.println("message received");
         ObjectMessage requestMessage = (ObjectMessage) message;
         try {
             IRequest requestObj = (IRequest) requestMessage.getObject();
+            //getting the queue from jndi using the producer's name
             Destination responseQueue = (Destination) getContext().lookup(requestObj.getSenderName());
 
             IResponse responseObj = RequestProcessor.processRequest(requestObj);

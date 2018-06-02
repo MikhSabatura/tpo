@@ -1,12 +1,20 @@
 package participants;
 
 import exceptions.Assignment_09_exception;
+import requests.ArithmeticRequest;
+import requests.ArithmeticRequestType;
+import requests.IRequest;
+import requests.RandomRequest;
+import responses.ArithmeticResponse;
+import responses.IResponse;
+import responses.RandomResponse;
 
 import javax.jms.*;
 import javax.naming.NamingException;
+import java.math.BigDecimal;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.Condition;
 
 public class Requester extends Participant implements Runnable {
 
@@ -41,11 +49,68 @@ public class Requester extends Participant implements Runnable {
         try {
             connection = getConnectionFactory().createConnection();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            Destination resultQueue = session.createQueue(name);
-            getContext().rebind(name, resultQueue);
+            MessageProducer requestMessageProducer = session.createProducer(getRequestQueue());
 
+            Destination resultQueue = (Destination) getContext().lookup(name);
+            MessageConsumer responseMessageConsumer = session.createConsumer(resultQueue);
+
+            connection.start();
+            for (int i = 0; i < 3; i++) {
+                IRequest requestObj = produceRequest();
+                sendRequest(session, requestObj, requestMessageProducer);
+                IResponse responseObj = receiveResponse(responseMessageConsumer);
+                processResponse(responseObj);
+            }
+            //not sure if these lines are needed at all:
+            getContext().unbind(name);
         } catch (JMSException | NamingException e) {
+            e.printStackTrace();
             throw new Assignment_09_exception(e);
+        } finally {
+            if(connection != null) {
+                try {
+                    connection.close();
+                } catch (JMSException e) {
+                    throw new Assignment_09_exception(e);
+                }
+            }
         }
     }
+
+    private void processResponse(IResponse responseObj) {
+        // TODO: 02.06.2018 print some info
+
+
+        if(responseObj instanceof RandomResponse) {
+            RandomResponse randomResponse = (RandomResponse) responseObj;
+            System.out.println("received random response");
+        } else if (responseObj instanceof ArithmeticResponse) {
+            ArithmeticResponse arithmeticResponse = (ArithmeticResponse) responseObj;
+            System.out.println("received arithmetic response");
+        } else {
+            throw new Assignment_09_exception("ILLEGAL RESPONSE TYPE");
+        }
+    }
+
+    private IRequest produceRequest() {
+        Random random = new Random();
+        if (random.nextInt(2) == 0) {
+            return new RandomRequest(name);
+        } else {
+            BigDecimal p1 = new BigDecimal(random.nextInt());
+            BigDecimal p2 = new BigDecimal(random.nextInt());
+            ArithmeticRequestType reqType = ArithmeticRequestType.values()[random.nextInt(ArithmeticRequestType.values().length)];
+            return new ArithmeticRequest(p1, p2, reqType, name);
+        }
+    }
+
+    private void sendRequest(Session session, IRequest requestObj, MessageProducer messageProducer) throws JMSException {
+        Message requestMessage = session.createObjectMessage(requestObj);
+        messageProducer.send(requestMessage);
+    }
+
+    private IResponse receiveResponse(MessageConsumer messageConsumer) throws JMSException {
+        return (IResponse) ((ObjectMessage) messageConsumer.receive()).getObject();
+    }
+
 }
