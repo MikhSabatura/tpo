@@ -10,6 +10,11 @@ public class RandomRequest implements IRequest {
 
     @Override
     public String getSenderName() {
-        return null;
+        return senderName;
+    }
+
+    @Override
+    public String toString() {
+        return "Random request";
     }
 }

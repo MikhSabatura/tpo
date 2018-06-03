@@ -62,7 +62,6 @@ public class Requester extends Participant implements Runnable {
                 processResponse(responseObj);
             }
             //not sure if these lines are needed at all:
-            getContext().unbind(name);
         } catch (JMSException | NamingException e) {
             e.printStackTrace();
             throw new Assignment_09_exception(e);
@@ -78,15 +77,13 @@ public class Requester extends Participant implements Runnable {
     }
 
     private void processResponse(IResponse responseObj) {
-        // TODO: 02.06.2018 print some info
-
-
+        // TODO: 03.06.2018 log the whole thing
         if(responseObj instanceof RandomResponse) {
             RandomResponse randomResponse = (RandomResponse) responseObj;
-            System.out.println("received random response");
+            System.out.println(name + randomResponse.getResult() + " random");
         } else if (responseObj instanceof ArithmeticResponse) {
             ArithmeticResponse arithmeticResponse = (ArithmeticResponse) responseObj;
-            System.out.println("received arithmetic response");
+            System.out.println(name + " " + arithmeticResponse.getResult() + " arithmetic");
         } else {
             throw new Assignment_09_exception("ILLEGAL RESPONSE TYPE");
         }
@@ -97,8 +94,8 @@ public class Requester extends Participant implements Runnable {
         if (random.nextInt(2) == 0) {
             return new RandomRequest(name);
         } else {
-            BigDecimal p1 = new BigDecimal(random.nextInt());
-            BigDecimal p2 = new BigDecimal(random.nextInt());
+            BigDecimal p1 = new BigDecimal(random.nextInt(1000));
+            BigDecimal p2 = new BigDecimal(random.nextInt(1000));
             ArithmeticRequestType reqType = ArithmeticRequestType.values()[random.nextInt(ArithmeticRequestType.values().length)];
             return new ArithmeticRequest(p1, p2, reqType, name);
         }

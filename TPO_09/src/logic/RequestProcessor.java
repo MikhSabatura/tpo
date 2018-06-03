@@ -9,6 +9,7 @@ import responses.IResponse;
 import responses.RandomResponse;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class RequestProcessor {
 
@@ -39,7 +40,7 @@ public class RequestProcessor {
             case MULTIPLY:
                 return new ArithmeticResponse(param1.multiply(param2));
             case DIVIDE:
-                return new ArithmeticResponse(param1.divide(param2, 20));
+                return new ArithmeticResponse(param1.divide(param2, RoundingMode.HALF_UP));
         }
         return null;
     }

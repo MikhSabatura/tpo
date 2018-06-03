@@ -12,6 +12,6 @@ public class ArithmeticResponse implements IResponse {
 
     @Override
     public BigDecimal getResult() {
-        return null;
+        return result;
     }
 }

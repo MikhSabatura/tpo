@@ -67,11 +67,13 @@ public class Service extends Participant implements Runnable, MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        System.out.println("message received");
         ObjectMessage requestMessage = (ObjectMessage) message;
         try {
             IRequest requestObj = (IRequest) requestMessage.getObject();
             //getting the queue from jndi using the producer's name
+            // temp
+            System.out.println(name + " | " + requestObj);
+            // /temp
             Destination responseQueue = (Destination) getContext().lookup(requestObj.getSenderName());
 
             IResponse responseObj = RequestProcessor.processRequest(requestObj);
@@ -79,8 +81,12 @@ public class Service extends Participant implements Runnable, MessageListener {
             ObjectMessage responseMessage = session.createObjectMessage(responseObj);
 
             session.createProducer(responseQueue).send(responseMessage);
+//            temp
+            System.out.println(name + " | " + responseObj.getResult());
+//            /temp
         } catch (Exception e) {
-            throw new Assignment_09_exception(e);
+            e.printStackTrace();
+//            throw new Assignment_09_exception(e);
         }
     }
 }

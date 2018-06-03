@@ -33,4 +33,9 @@ public class ArithmeticRequest implements IRequest {
     public String getSenderName() {
         return senderName;
     }
+
+    @Override
+    public String toString() {
+        return "p1 = " + param1.toString() + " p2 = " + param2.toString() + " type = " + type;
+    }
 }
