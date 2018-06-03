@@ -14,4 +14,9 @@ public class ArithmeticResponse implements IResponse {
     public BigDecimal getResult() {
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "result = " + result + " type = arithmetic";
+    }
 }

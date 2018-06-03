@@ -15,4 +15,9 @@ public class RandomResponse implements IResponse {
     public BigDecimal getResult() {
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "result = " + result + " type = random";
+    }
 }

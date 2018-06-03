@@ -1,6 +1,7 @@
 package participants;
 
 import exceptions.Assignment_09_exception;
+import org.apache.log4j.Logger;
 
 import javax.annotation.Resource;
 import javax.jms.ConnectionFactory;
@@ -10,6 +11,10 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 public abstract class Participant {
+
+    protected final int id;
+    protected final String name;
+    protected final Logger logger;
 
     private static Context context;
     private static ConnectionFactory connectionFactory;
@@ -28,6 +33,16 @@ public abstract class Participant {
         }
     }
 
+    public Participant() {
+        this.id = getId();
+        this.name = getNamePrefix() + id;
+        this.logger = Logger.getLogger(name);
+    }
+
+    protected abstract String getNamePrefix();
+
+    protected abstract int getId();
+
     public static Context getContext() {
         return context;
     }
@@ -38,5 +53,13 @@ public abstract class Participant {
 
     public static Destination getRequestQueue() {
         return requestQueue;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Logger getLogger() {
+        return logger;
     }
 }

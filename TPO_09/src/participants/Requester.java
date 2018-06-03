@@ -1,6 +1,7 @@
 package participants;
 
 import exceptions.Assignment_09_exception;
+import org.apache.log4j.Logger;
 import requests.ArithmeticRequest;
 import requests.ArithmeticRequestType;
 import requests.IRequest;
@@ -18,22 +19,13 @@ import java.util.concurrent.Executors;
 
 public class Requester extends Participant implements Runnable {
 
-    private int id;
-    private final String name;
-
-    private static int ID;
+    private static int id_counter = 0;
     private static final int THREAD_COUNT = 10;
     private static final ExecutorService executorService;
     private static final String NAME_PREFIX = "REQUESTER-";
 
     static {
-        ID = 0;
         executorService = Executors.newFixedThreadPool(THREAD_COUNT);
-    }
-
-    public Requester() {
-        this.id = ++ID;
-        this.name = NAME_PREFIX + id;
     }
 
     public static void main(String[] args) {
@@ -41,6 +33,7 @@ public class Requester extends Participant implements Runnable {
             executorService.submit(new Requester());
         }
         System.out.println("Requester threads started");
+        executorService.shutdown();
     }
 
     @Override
@@ -57,11 +50,12 @@ public class Requester extends Participant implements Runnable {
             connection.start();
             for (int i = 0; i < 3; i++) {
                 IRequest requestObj = produceRequest();
+                logger.info("request prepared " + requestObj);
                 sendRequest(session, requestObj, requestMessageProducer);
+                logger.info("request put into destination");
                 IResponse responseObj = receiveResponse(responseMessageConsumer);
                 processResponse(responseObj);
             }
-            //not sure if these lines are needed at all:
         } catch (JMSException | NamingException e) {
             e.printStackTrace();
             throw new Assignment_09_exception(e);
@@ -77,16 +71,7 @@ public class Requester extends Participant implements Runnable {
     }
 
     private void processResponse(IResponse responseObj) {
-        // TODO: 03.06.2018 log the whole thing
-        if(responseObj instanceof RandomResponse) {
-            RandomResponse randomResponse = (RandomResponse) responseObj;
-            System.out.println(name + randomResponse.getResult() + " random");
-        } else if (responseObj instanceof ArithmeticResponse) {
-            ArithmeticResponse arithmeticResponse = (ArithmeticResponse) responseObj;
-            System.out.println(name + " " + arithmeticResponse.getResult() + " arithmetic");
-        } else {
-            throw new Assignment_09_exception("ILLEGAL RESPONSE TYPE");
-        }
+        logger.info("response received " + responseObj);
     }
 
     private IRequest produceRequest() {
@@ -110,4 +95,13 @@ public class Requester extends Participant implements Runnable {
         return (IResponse) ((ObjectMessage) messageConsumer.receive()).getObject();
     }
 
+    @Override
+    protected String getNamePrefix() {
+        return NAME_PREFIX;
+    }
+
+    @Override
+    protected int getId() {
+        return ++id_counter;
+    }
 }
