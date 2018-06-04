@@ -1,7 +1,5 @@
 package exceptions;
 
-import javax.naming.NamingException;
-
 public class Assignment_09_exception extends RuntimeException {
 
     public Assignment_09_exception(String message) {

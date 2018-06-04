@@ -1,6 +1,5 @@
 package requests;
 
-import javax.jms.ObjectMessage;
 import java.math.BigDecimal;
 
 public class ArithmeticRequest implements IRequest {
