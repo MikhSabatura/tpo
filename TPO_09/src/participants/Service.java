@@ -6,26 +6,21 @@ import requests.IRequest;
 import responses.IResponse;
 
 import javax.jms.*;
-import javax.naming.NamingException;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Service extends Participant implements Runnable, MessageListener {
 
-    // TODO: 02.06.2018 0. review and refactor
+    // TODO:0. refactor
 
     private Connection connection;
     private Session session;
 
     private static int id_count = 0;
     private static final int THREAD_COUNT = 5;
-    private static final ExecutorService executorService;
     private static final String NAME_PREFIX = "SERVICE-";
 
-    static {
-        executorService = Executors.newFixedThreadPool(THREAD_COUNT);
-    }
 
     public Service() {
         super();
@@ -38,6 +33,7 @@ public class Service extends Participant implements Runnable, MessageListener {
     }
 
     public static void main(String[] args) {
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
         for (int i = 0; i < THREAD_COUNT; i++) {
             executorService.submit(new Service());
         }
@@ -82,7 +78,7 @@ public class Service extends Participant implements Runnable, MessageListener {
     }
 
     @Override
-    protected int getId() {
+    protected int computeId() {
         return ++id_count;
     }
 }

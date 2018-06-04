@@ -3,7 +3,6 @@ package participants;
 import exceptions.Assignment_09_exception;
 import org.apache.log4j.Logger;
 
-import javax.annotation.Resource;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.naming.Context;
@@ -34,14 +33,14 @@ public abstract class Participant {
     }
 
     public Participant() {
-        this.id = getId();
+        this.id = computeId();
         this.name = getNamePrefix() + id;
         this.logger = Logger.getLogger(name);
     }
 
     protected abstract String getNamePrefix();
 
-    protected abstract int getId();
+    protected abstract int computeId();
 
     public static Context getContext() {
         return context;

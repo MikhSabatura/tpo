@@ -1,14 +1,11 @@
 package participants;
 
 import exceptions.Assignment_09_exception;
-import org.apache.log4j.Logger;
 import requests.ArithmeticRequest;
 import requests.ArithmeticRequestType;
 import requests.IRequest;
 import requests.RandomRequest;
-import responses.ArithmeticResponse;
 import responses.IResponse;
-import responses.RandomResponse;
 
 import javax.jms.*;
 import javax.naming.NamingException;
@@ -21,14 +18,10 @@ public class Requester extends Participant implements Runnable {
 
     private static int id_counter = 0;
     private static final int THREAD_COUNT = 10;
-    private static final ExecutorService executorService;
     private static final String NAME_PREFIX = "REQUESTER-";
 
-    static {
-        executorService = Executors.newFixedThreadPool(THREAD_COUNT);
-    }
-
     public static void main(String[] args) {
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
         for (int i = 0; i < THREAD_COUNT; i++) {
             executorService.submit(new Requester());
         }
@@ -60,7 +53,7 @@ public class Requester extends Participant implements Runnable {
             e.printStackTrace();
             throw new Assignment_09_exception(e);
         } finally {
-            if(connection != null) {
+            if (connection != null) {
                 try {
                     connection.close();
                 } catch (JMSException e) {
@@ -101,7 +94,7 @@ public class Requester extends Participant implements Runnable {
     }
 
     @Override
-    protected int getId() {
+    protected int computeId() {
         return ++id_counter;
     }
 }
