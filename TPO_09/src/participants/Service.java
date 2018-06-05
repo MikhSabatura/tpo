@@ -20,7 +20,6 @@ public class Service extends Participant implements MessageListener {
     private static int id_count = 0;
     private static final String NAME_PREFIX = "SERVICE-";
 
-
     public Service() {
         super();
         try {
