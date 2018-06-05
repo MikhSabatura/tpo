@@ -11,7 +11,7 @@ import javax.jms.*;
 import java.math.BigDecimal;
 import java.util.Random;
 
-public class Requester extends Participant implements Runnable {
+public class Requester extends Participant {
 
     private static int id_counter = 0;
     private static final String NAME_PREFIX = "REQUESTER-";

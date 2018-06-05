@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Service extends Participant implements Runnable, MessageListener {
+public class Service extends Participant implements MessageListener {
 
     // TODO:0. refactor
 
