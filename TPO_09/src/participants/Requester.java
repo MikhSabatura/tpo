@@ -8,26 +8,13 @@ import requests.RandomRequest;
 import responses.IResponse;
 
 import javax.jms.*;
-import javax.naming.NamingException;
 import java.math.BigDecimal;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Requester extends Participant implements Runnable {
 
     private static int id_counter = 0;
-    private static final int THREAD_COUNT = 10;
     private static final String NAME_PREFIX = "REQUESTER-";
-
-    public static void main(String[] args) {
-        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
-        for (int i = 0; i < THREAD_COUNT; i++) {
-            executorService.submit(new Requester());
-        }
-        System.out.println("Requester threads started");
-        executorService.shutdown();
-    }
 
     @Override
     public void run() {
@@ -37,7 +24,7 @@ public class Requester extends Participant implements Runnable {
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             MessageProducer requestMessageProducer = session.createProducer(getRequestQueue());
 
-            Destination resultQueue = (Destination) getContext().lookup(name);
+            Destination resultQueue = session.createQueue(name);
             MessageConsumer responseMessageConsumer = session.createConsumer(resultQueue);
 
             connection.start();
@@ -49,7 +36,7 @@ public class Requester extends Participant implements Runnable {
                 IResponse responseObj = receiveResponse(responseMessageConsumer);
                 processResponse(responseObj);
             }
-        } catch (JMSException | NamingException e) {
+        } catch (JMSException e) {
             e.printStackTrace();
             throw new Assignment_09_exception(e);
         } finally {
@@ -57,6 +44,7 @@ public class Requester extends Participant implements Runnable {
                 try {
                     connection.close();
                 } catch (JMSException e) {
+                    logger.fatal(e);
                     throw new Assignment_09_exception(e);
                 }
             }

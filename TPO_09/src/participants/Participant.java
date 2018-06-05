@@ -8,6 +8,8 @@ import javax.jms.Destination;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public abstract class Participant {
 
@@ -36,6 +38,19 @@ public abstract class Participant {
         this.id = computeId();
         this.name = getNamePrefix() + id;
         this.logger = Logger.getLogger(name);
+    }
+
+    public static void main(String[] args) {
+        final int serviceThreadCount = Integer.parseInt(args[0]);
+        final int requesterThreadCount = Integer.parseInt(args[1]);
+        ExecutorService executorService = Executors.newFixedThreadPool(serviceThreadCount + requesterThreadCount);
+        for (int i = 0; i < serviceThreadCount; i++) {
+            executorService.submit(new Service());
+        }
+        for (int i = 0; i < requesterThreadCount; i++) {
+            executorService.submit(new Requester());
+        }
+        executorService.shutdown();
     }
 
     protected abstract String getNamePrefix();

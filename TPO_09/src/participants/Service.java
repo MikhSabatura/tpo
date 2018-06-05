@@ -18,7 +18,6 @@ public class Service extends Participant implements Runnable, MessageListener {
     private Session session;
 
     private static int id_count = 0;
-    private static final int THREAD_COUNT = 5;
     private static final String NAME_PREFIX = "SERVICE-";
 
 
@@ -28,16 +27,10 @@ public class Service extends Participant implements Runnable, MessageListener {
             this.connection = getConnectionFactory().createConnection();
             this.session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         } catch (JMSException e) {
+            logger.fatal("need to start jms broker first");
+            logger.fatal(e);
             throw new Assignment_09_exception(e);
         }
-    }
-
-    public static void main(String[] args) {
-        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
-        for (int i = 0; i < THREAD_COUNT; i++) {
-            executorService.submit(new Service());
-        }
-        System.out.println("Service threads started");
     }
 
     @Override
@@ -57,11 +50,11 @@ public class Service extends Participant implements Runnable, MessageListener {
         try {
             IRequest requestObj = (IRequest) requestMessage.getObject();
             logger.info("request received " + requestObj);
-            Destination responseQueue = (Destination) getContext().lookup(requestObj.getSenderName());
+            Destination responseQueue = session.createQueue(requestObj.getSenderName());
 
-            IResponse responseObj = RequestProcessor.processRequest(requestObj);
             logger.info("starting to process the request");
-            Thread.sleep(3000 + new Random().nextInt(2000));
+            IResponse responseObj = RequestProcessor.processRequest(requestObj);
+//            Thread.sleep(3000 + new Random().nextInt(2000));
             logger.info("request processed");
             ObjectMessage responseMessage = session.createObjectMessage(responseObj);
 
