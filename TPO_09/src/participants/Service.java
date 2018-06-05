@@ -54,7 +54,7 @@ public class Service extends Participant implements Runnable, MessageListener {
 
             logger.info("starting to process the request");
             IResponse responseObj = RequestProcessor.processRequest(requestObj);
-//            Thread.sleep(3000 + new Random().nextInt(2000));
+            Thread.sleep(3000 + new Random().nextInt(2000));
             logger.info("request processed");
             ObjectMessage responseMessage = session.createObjectMessage(responseObj);
 
