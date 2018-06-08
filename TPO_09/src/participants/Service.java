@@ -12,8 +12,6 @@ import java.util.concurrent.Executors;
 
 public class Service extends Participant implements MessageListener {
 
-    // TODO:0. refactor
-
     private Connection connection;
     private Session session;
 

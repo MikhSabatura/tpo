@@ -69,11 +69,4 @@ public abstract class Participant implements Runnable {
         return requestQueue;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Logger getLogger() {
-        return logger;
-    }
 }
